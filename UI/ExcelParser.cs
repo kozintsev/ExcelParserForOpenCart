@@ -23,6 +23,14 @@ namespace ExcelParserForOpenCart
             // Open Excel and get first worksheet.
             var application = new Application();
             var workbook = application.Workbooks.Open(fileName);
+            var worksheet = workbook.Worksheets[1] as Worksheet;
+            if (worksheet == null) return;
+            var row = worksheet.Rows.Count;
+            var column = worksheet.Columns.Count;
+            for (var i = 0; i > row; i++)
+            {
+                
+            }
         }
 
         public void SaveResult(string fileName)
@@ -42,6 +50,20 @@ namespace ExcelParserForOpenCart
                 PlusThePrice = "100"
             };
             list.Add(line);
+            var line2 = new OutputPriceLine
+            {
+                Name = "Имя",
+                VendorCode = "7654321",
+                Category1 = "Багажники на Suzuki",
+                Category2 = "Багажники",
+                ProductDescription = "Огромный багажник, вместительностью до 300 кг",
+                Cost = "3000",
+                Foto = "http://img.yandex.ru/2034.jpg",
+                Option = "Нет",
+                Qt = "2000",
+                PlusThePrice = "200"
+            };
+            list.Add(line2);
             var template = Global.GetTemplate();
             if (template == null)
             {
