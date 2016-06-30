@@ -68,5 +68,19 @@ namespace ExcelParserForOpenCart
             if (string.IsNullOrEmpty(filename)) return;
             _excelParser.SaveResult(filename);
         }
+
+        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            switch (ComBoxSelectPrice.SelectedIndex)
+            {
+                case 1:
+                    // Запускаем метод для одного прайслиста
+                    break;
+                case 2:
+                    // Как правильно запускать метод обработки прайслиста, я еще не знаю
+                    break;
+                //...
+            }
+        }
     }
 }

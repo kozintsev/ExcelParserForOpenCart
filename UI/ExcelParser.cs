@@ -16,7 +16,7 @@ namespace ExcelParserForOpenCart
         private readonly bool _isExcelInstal;        
         private readonly BackgroundWorker _workerSave;
         private readonly BackgroundWorker _workerOpen;
-        private List<OutputPriceLine> _list;
+        private readonly List<OutputPriceLine> _list;
         private string _template;
         private string _openFileName;
         private string _saveFileName;
@@ -24,6 +24,7 @@ namespace ExcelParserForOpenCart
         public ExcelParser()
         {
             _isExcelInstal = true;
+            _list = new List<OutputPriceLine>();
             if (!IsExcelInstall())
             {
                 SendMessage("Excel не установлен!");
@@ -51,6 +52,7 @@ namespace ExcelParserForOpenCart
                 SendMessage("Ошибка! Файл отсутствует!");
                 return;
             }
+            _list.Clear();
             _workerOpen.RunWorkerAsync();
         }
 
@@ -157,7 +159,7 @@ namespace ExcelParserForOpenCart
 
         private void _workerOpen_DoWork(object sender, DoWorkEventArgs e)
         {
-            _list = new List<OutputPriceLine>();
+            _list.Clear();
             var application = new Application();
             var workbook = application.Workbooks.Open(_openFileName);
             var worksheet = workbook.Worksheets[1] as Worksheet;
@@ -166,13 +168,39 @@ namespace ExcelParserForOpenCart
             var row = worksheet.Rows.Count;
             //var column = worksheet.Columns.Count; 
             // обработка для прайса 2 союза
-            for (var i = 10; i < row; i++)
+            var category1 = string.Empty;
+            var category2 = string.Empty;
+            for (var i = 9; i < row; i++)
             {
                 // todo: алгоритм требует большой доработки
                 var line = new OutputPriceLine();
-                var theRange = range.Cells[i, 3] as Range;
+                var str = string.Empty;
+                var theRange = range.Cells[i, 1] as Range;
                 if (theRange != null)
+                {
+                    str = ConverterToString(theRange.Value2);                    
+                    var color = theRange.Interior.Color;
+                    var sc = color.ToString();
+                    if (sc == "0") // чёрный
+                    {
+                        category1 = str;
+                        category2 = string.Empty;
+                        continue;
+                    }
+                    if (sc == "8421504")
+                    {
+                        category2 = str;
+                        continue;
+                    }
+                }
+                line.Category1 = category1;
+                line.Category2 = category2;
+                theRange = range.Cells[i, 3] as Range;
+                if (theRange != null)
+                {
                     line.VendorCode = ConverterToString(theRange.Value2);
+                    var color = theRange.Interior.Color;
+                }
                 theRange = range.Cells[i, 4] as Range;
                 if (theRange != null)
                     line.Name = ConverterToString(theRange.Value2);
@@ -182,8 +210,9 @@ namespace ExcelParserForOpenCart
                 theRange = range.Cells[i, 6] as Range;
                 if (theRange != null)
                     line.Cost = ConverterToString(theRange.Value2);
-                _list.Add(line);
-                if (string.IsNullOrEmpty(line.VendorCode)) break;
+                if (!string.IsNullOrEmpty(line.VendorCode))
+                    _list.Add(line);
+                if (string.IsNullOrEmpty(str)) break;
             }
             application.Quit();
             ReleaseObject(worksheet);

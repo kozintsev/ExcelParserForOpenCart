@@ -5,7 +5,16 @@
     <Grid>
         <Button x:Name="BtnOpen" Content="Открыть" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="BtnOpen_Click"/>
         <Button x:Name="BtnSave" Content="Сохранить" HorizontalAlignment="Left" Margin="249,10,0,0" VerticalAlignment="Top" Width="75" Click="BtnSave_Click" IsEnabled="False"/>
-        <ComboBox HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="154"/>
+        <ComboBox x:Name="ComBoxSelectPrice" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="154" SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBoxItem Content="2 союза" HorizontalAlignment="Left" Width="152"/>
+            <ComboBoxItem Content="OJ" HorizontalAlignment="Left" Width="152"/>
+            <ComboBoxItem Content="ТД ГРУПП" HorizontalAlignment="Left" Width="152"/>
+            <ComboBoxItem Content="Лаптер" HorizontalAlignment="Left" Width="152"/>
+            <ComboBoxItem Content="Композит" HorizontalAlignment="Left" Width="152"/>
+            <ComboBoxItem Content="Риваль" HorizontalAlignment="Left" Width="152"/>
+            <ComboBoxItem Content="ПТ Групп" HorizontalAlignment="Left" Width="152"/>
+            <ComboBoxItem Content="Пьянов" HorizontalAlignment="Left" Width="152"/>
+        </ComboBox>
         <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="9" Margin="10,37,0,0" VerticalAlignment="Top" Width="314"/>
         <ListBox x:Name="MessageList" HorizontalAlignment="Left" Height="93" Margin="10,51,0,0" VerticalAlignment="Top" Width="313"/>
 
