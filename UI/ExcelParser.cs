@@ -249,6 +249,25 @@ namespace ExcelParserForOpenCart
                     For2Union(row, range);
                     break;
                 case EnumPrices.OJ:
+                    OjPrice(row, range);
+                    break;
+                case EnumPrices.tdgroup:
+                    TdgroupPrice(row, range);
+                    break;
+                case EnumPrices.lapter:
+                    LapterPrice(row, range);
+                    break;
+                case EnumPrices.composite:
+                    CompositePrice(row, range);
+                    break;
+                case EnumPrices.rival:
+                    RivalPrice(row, range);
+                    break;
+                case EnumPrices.ptgroup:
+                    PtgroupPrice(row, range);
+                    break;
+                case EnumPrices.pyanov:
+                    PyanovPrice(row, range);
                     break;
                 default:
                     For2Union(row, range);
