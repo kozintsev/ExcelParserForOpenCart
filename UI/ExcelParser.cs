@@ -36,6 +36,19 @@ namespace ExcelParserForOpenCart
             }
         }
 
+        public bool IsStart()
+        {
+            if (_workerOpen != null) return _workerOpen.IsBusy;
+            if (_workerSave != null) return _workerSave.IsBusy;
+            return false;
+        }
+
+        public void CancelParsing()
+        {
+            if (_workerOpen != null && _workerOpen.IsBusy) _workerOpen.CancelAsync();
+            if (_workerSave != null && _workerSave.IsBusy) _workerSave.CancelAsync();
+        }
+
         public void OpenExcel(string fileName)
         {
             _openFileName = fileName;
@@ -47,7 +60,7 @@ namespace ExcelParserForOpenCart
                 return;
             }
             _list.Clear();
-            _workerOpen = new BackgroundWorker { WorkerReportsProgress = true };
+            _workerOpen = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
             _workerOpen.DoWork += DoWorkOpen;
             _workerOpen.RunWorkerCompleted += RunCompletedOpenWorker;
             _workerOpen.ProgressChanged += ProgressChangedWorkerOpen;
@@ -71,7 +84,7 @@ namespace ExcelParserForOpenCart
                 return;
             }
             if (_list == null || _list.Count < 1) return;
-            _workerSave = new BackgroundWorker { WorkerReportsProgress = true };
+            _workerSave = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true};
             _workerSave.DoWork += DoWorkSave;
             _workerSave.RunWorkerCompleted += RunWorkerCompletedWorkerSave;
             _workerSave.ProgressChanged += ProgressChangedWorkerSave;
@@ -87,8 +100,15 @@ namespace ExcelParserForOpenCart
 
         private void RunCompletedOpenWorker(object sender, RunWorkerCompletedEventArgs e)
         {
-            SendMessage("Завершён анализ документа: " + _openFileName);
-            if (OnOpenDocument != null) OnOpenDocument(null, null);
+            if (e.Cancelled)
+            {
+                SendMessage("Отменён анализ документа: " + _openFileName);
+            }
+            else
+            {
+                SendMessage("Завершён анализ документа: " + _openFileName);
+                if (OnOpenDocument != null) OnOpenDocument(null, null);
+            }
         }
 
         private void DoWorkOpen(object sender, DoWorkEventArgs e)
@@ -98,6 +118,16 @@ namespace ExcelParserForOpenCart
             var application = new Application();
             var workbook = application.Workbooks.Open(_openFileName);
             var worksheet = workbook.Worksheets[1] as Worksheet;
+            if (_workerOpen.CancellationPending)
+            {
+                application.Quit();
+                ReleaseObject(worksheet);
+                ReleaseObject(workbook);
+                ReleaseObject(application);
+                _workerOpen.ReportProgress(0);
+                e.Cancel = true;
+                return;
+            }
             if (worksheet == null) return;
             var range = worksheet.UsedRange;
             var row = worksheet.Rows.Count;
@@ -107,12 +137,12 @@ namespace ExcelParserForOpenCart
             switch (PriceType)
             {
                 case EnumPrices.ДваСоюза:
-                    var for2Union = new For2Union();
+                    var for2Union = new For2Union(sender, e);
                     for2Union.Analyze(row, range);
                     _list = for2Union.List;
                     break;
                 case EnumPrices.OJ:
-                    var ojPrice = new OjPrice();
+                    var ojPrice = new OjPrice(sender, e);
                     ojPrice.OnMsg += s =>
                     {
                         _workerOpen.ReportProgress(20, s);
@@ -122,7 +152,7 @@ namespace ExcelParserForOpenCart
                 case EnumPrices.ПТГрупп:
                     break;
                 case EnumPrices.Autogur73:
-                    var autogurPrice = new AutogurPrice();
+                    var autogurPrice = new AutogurPrice(sender, e);
                     autogurPrice.Analyze(row, range);
                     _list = autogurPrice.List;
                     break;
@@ -141,7 +171,7 @@ namespace ExcelParserForOpenCart
             ReleaseObject(worksheet);
             ReleaseObject(workbook);
             ReleaseObject(application);
-            _workerOpen.ReportProgress(50);
+            _workerOpen.ReportProgress(!e.Cancel ? 50 : 0);
         }
 
         private void ProgressChangedWorkerSave(object sender, ProgressChangedEventArgs e)
@@ -151,20 +181,44 @@ namespace ExcelParserForOpenCart
 
         private void RunWorkerCompletedWorkerSave(object sender, RunWorkerCompletedEventArgs e)
         {
-            SendMessage("Прайс создан! Сохраняю как: " + _saveFileName);
-            if (OnSaveDocument != null) OnSaveDocument(null, null);
+            if (e.Cancelled)
+            {
+                SendMessage("Отменено сохранение документа: " + _saveFileName);
+            }
+            else
+            {
+                SendMessage("Прайс создан! Сохраняю как: " + _saveFileName);
+                if (OnSaveDocument != null) OnSaveDocument(null, null);   
+            }
         }
 
         private void DoWorkSave(object sender, DoWorkEventArgs e)
         {
+            _workerSave.ReportProgress(65);
             var application = new Application();
             var workbook = application.Workbooks.Open(_template);
             var worksheet = workbook.Worksheets[1] as Worksheet;
             if (worksheet == null) return;
+            _workerSave.ReportProgress(70);
+            if (_workerSave.CancellationPending)
+            {
+                application.Quit();
+                ReleaseObject(worksheet);
+                ReleaseObject(workbook);
+                ReleaseObject(application);
+                _workerSave.ReportProgress(50);
+                e.Cancel = true;
+                return;
+            }
             // действия по заполнению шаблона
             var i = 2;
             foreach (var obj in _list)
             {
+                if (_workerSave.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
                 // заносить полученную линию в шаблон
                 worksheet.Cells[i, 1] = obj.VendorCode;
                 worksheet.Cells[i, 2] = obj.Name;
@@ -178,12 +232,12 @@ namespace ExcelParserForOpenCart
                 worksheet.Cells[i, 10] = obj.PlusThePrice;
                 i++;
             }
-            worksheet.SaveAs(_saveFileName);
+            if (!_workerSave.CancellationPending) worksheet.SaveAs(_saveFileName);
             application.Quit();
             ReleaseObject(worksheet);
             ReleaseObject(workbook);
             ReleaseObject(application);
-            _workerSave.ReportProgress(100);
+            _workerSave.ReportProgress(!e.Cancel ? 100 : 50);
         }
 
         private void SendMessage(string message)

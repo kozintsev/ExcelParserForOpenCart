@@ -1,9 +1,18 @@
-﻿using Microsoft.Office.Interop.Excel;
+﻿using System.ComponentModel;
+using Microsoft.Office.Interop.Excel;
 
 namespace ExcelParserForOpenCart.Prices
 {
     public class For2Union : GeneralMethods
     {
+        private readonly BackgroundWorker _worker;
+        private readonly DoWorkEventArgs _e;
+
+        public For2Union(object sender, DoWorkEventArgs e)
+        {
+            _worker = sender as BackgroundWorker;
+            _e = e;
+        }
         /// <summary>
         /// Обработка для прайса 2 союза
         /// </summary>
@@ -11,11 +20,21 @@ namespace ExcelParserForOpenCart.Prices
         /// <param name="range"></param>
         public void Analyze(int row, Range range)
         {
+            if (_worker.CancellationPending)
+            {
+                _e.Cancel = true;
+                return;
+            }
             var category1 = string.Empty;
             var category2 = string.Empty;
             List.Clear();
             for (var i = 9; i < row; i++)
             {
+                if (_worker.CancellationPending)
+                {                
+                    _e.Cancel = true;
+                    break;
+                }
                 var line = new OutputPriceLine();
                 var str = string.Empty;
                 var theRange = range.Cells[i, 1] as Range;

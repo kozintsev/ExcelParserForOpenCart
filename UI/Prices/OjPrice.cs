@@ -1,11 +1,26 @@
 ﻿using System;
+using System.ComponentModel;
 using Microsoft.Office.Interop.Excel;
 
 namespace ExcelParserForOpenCart.Prices
 {
     public class OjPrice : GeneralMethods
     {
-        public event Action<string> OnMsg; 
+        public event Action<string> OnMsg;
+
+        private readonly BackgroundWorker _worker;
+        private readonly DoWorkEventArgs _e;
+
+        public OjPrice()
+        {
+            
+        }
+
+        public OjPrice(object sender, DoWorkEventArgs e)
+        {
+            _worker = sender as BackgroundWorker;
+            _e = e;
+        }
         /// <summary>
         /// Обработка прайсов, таких как: Каталог OJ 2016_06_01 вер. 6
         /// </summary>
@@ -13,12 +28,22 @@ namespace ExcelParserForOpenCart.Prices
         /// <param name="range"></param>
         public  void Analyze(int row, Range range)
         {
+            if (_worker.CancellationPending)
+            {
+                _e.Cancel = true;
+                return;
+            }
             var category1 = string.Empty;
             var needOption = true;
             List.Clear();
             var baseConnecter = new BaseConnecter(OnBaseMsgAction);
             for (var i = 2; i < row; i++)
             {
+                if (_worker.CancellationPending)
+                {
+                    _e.Cancel = true;
+                    break;
+                }
                 if (i == 3) continue;
                 var line = new OutputPriceLine();
                 var str = ConverterToString(range.Cells[i, 1] as Range);
