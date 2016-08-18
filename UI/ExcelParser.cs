@@ -154,13 +154,6 @@ namespace ExcelParserForOpenCart
                     PTGrupp.Analyze(row, range);
                     _resultingPrice = PTGrupp.ResultingPrice;
                     break;
-
-                case EnumPrices.АвтоБРОНЯ:
-                    var AutoBRONYA = new AutoBronya(sender, e);
-                    AutoBRONYA.Analyze(row, range);
-                    _resultingPrice = AutoBRONYA.ResultingPrice;
-                    break;
-
                 case EnumPrices.Autogur73:
                     var autogurPrice = new AutogurPrice(sender, e);
                     autogurPrice.Analyze(row, range);

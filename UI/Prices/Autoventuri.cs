@@ -10,7 +10,11 @@ namespace ExcelParserForOpenCart.Prices
             Worker = sender as BackgroundWorker;
             E = e;
         }
-
+        /// <summary>
+        /// Прайс-лист ВЕНТУРИ ПРАЙС автовентури.xls
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="range"></param>
         public void Analyze(int row, Range range)
         {
             if(Worker.CancellationPending)
