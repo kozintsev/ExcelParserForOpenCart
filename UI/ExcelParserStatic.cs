@@ -71,7 +71,17 @@ namespace ExcelParserForOpenCart
             str2 = ConverterToString(range.Cells[4, 1] as Range);
 
             if (str1.Contains("ПРАЙС-ЛИСТ") && str2.Contains("Стальные Защиты картера АвтоБРОНЯ"))
-                return EnumPrices.АвтоБРОНЯ;
+                return EnumPrices.РИВАЛЬ_АвтоБРОНЯ;
+
+            str1 = ConverterToString(range.Cells[1, 1] as Range);
+            str2 = ConverterToString(range.Cells[3, 1] as Range);
+            if (str1.Contains("ПРАЙС ЛИСТ") && str2.Contains("Подкрылки"))
+                return EnumPrices.РИВАЛЬ_Подкрылки;
+
+            str1 = ConverterToString(range.Cells[1, 1] as Range);
+            str2 = ConverterToString(range.Cells[3, 1] as Range);
+            if (str1.Contains("ПРАЙС ЛИСТ")  && str2.Contains("Подлокотники"))
+                return EnumPrices.РИВАЛЬ_Подлокотники;
 
             return EnumPrices.Неизвестный;
         }
