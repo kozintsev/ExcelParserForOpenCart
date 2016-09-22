@@ -132,7 +132,8 @@ namespace ExcelParserForOpenCart
                         continue;
                     }
                     j = 0;
-                    foreach (var item in _resultingPrice.Where(item => item.VendorCode == vendorCode))
+                    if (string.IsNullOrWhiteSpace(urlPhoto)) continue;
+                    foreach (var item in _resultingPrice.Where(item => vendorCode != null && vendorCode.Trim().Contains(item.VendorCode)))
                     {
                         item.Foto = urlPhoto;
                         _countOfLink++;
