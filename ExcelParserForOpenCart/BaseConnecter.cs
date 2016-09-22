@@ -9,6 +9,7 @@ namespace ExcelParserForOpenCart
     {
         private readonly SQLiteConnection _connection;
         private readonly bool _isConnected;
+        private readonly bool _notExists;
         // делегат для обработки ошибок
         private Action<string> _onMsgAction;
 
@@ -16,11 +17,12 @@ namespace ExcelParserForOpenCart
         {
             _isConnected = true;
             _onMsgAction = onMsgAction;
+            _notExists = false; 
             var databaseName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "base.sqlite");
             if (!File.Exists(databaseName))
             {
                 _onMsgAction("Отсутствует файл базы данных");
-                _isConnected = false;
+                _notExists = true;
                 return;
             }
             _connection = new SQLiteConnection(string.Format("Data Source={0};", databaseName));
@@ -90,6 +92,7 @@ namespace ExcelParserForOpenCart
 
         public void Dispose()
         {
+            if (_notExists) return;
             _connection.Close();
             _connection.Dispose();
         }
