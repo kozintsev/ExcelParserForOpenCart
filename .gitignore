@@ -212,3 +212,11 @@ Output/Release/System.Data.SQLite.xml
 Output/Release/EntityFramework.SqlServer.xml
 Output/Release/EntityFramework.xml
 Output/Debug/HtmlAgilityPack.xml
+Output/Debug/Microsoft.Scripting.xml
+Output/Debug/IronPython.Modules.xml
+Output/Debug/IronPython.SQLite.xml
+Output/Debug/IronPython.Wpf.xml
+Output/Debug/IronPython.xml
+Output/Debug/Microsoft.Dynamic.xml
+Output/Debug/Microsoft.Scripting.AspNet.xml
+Output/Debug/Microsoft.Scripting.Metadata.xml

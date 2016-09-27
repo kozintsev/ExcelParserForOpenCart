@@ -195,6 +195,8 @@ namespace ExcelParserForOpenCart
             var range = worksheet.UsedRange;
             var row = worksheet.Rows.Count;
             _workerOpen.ReportProgress(10);
+            var py = new PyWrapper(sender, e);
+            py.Analyze(range);
             PriceType = DetermineTypeOfPriceList(range);
             switch (PriceType)
             {
