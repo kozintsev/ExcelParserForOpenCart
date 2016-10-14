@@ -118,7 +118,7 @@ namespace ExcelParserForOpenCart.Prices
                 pair = false;
                 line.VendorCode = string.IsNullOrEmpty(vendorCode) ? code : vendorCode;
                 line.Qt = "1000";
-                line.Producer = GetProducer(line.Name);
+                line.Producer = GetManufacturers(line.Name);
 
                 if (string.IsNullOrEmpty(vendorCode) && string.IsNullOrEmpty(code) && string.IsNullOrEmpty(line.Name))
                     break; 

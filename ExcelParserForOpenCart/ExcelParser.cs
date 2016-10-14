@@ -261,11 +261,25 @@ namespace ExcelParserForOpenCart
                     _workerOpen.ReportProgress(0, "Прайс не опознан");
                     break;
             }
+            DetetmineManufacturer();
             application.Quit();
             ReleaseObject(worksheet);
             ReleaseObject(workbook);
             ReleaseObject(application);
             _workerOpen.ReportProgress(!e.Cancel ? 50 : 0);
+        }
+
+        private void DetetmineManufacturer()
+        {
+            foreach (var item in _resultingPrice)
+            {
+                if (!string.IsNullOrWhiteSpace(item.Producer)) continue;
+                var m = GetManufacturers(item.ProductDescription);
+                if (!string.IsNullOrWhiteSpace(m))
+                {
+                    item.Producer = m;
+                }
+            }
         }
 
         private void ProgressChangedWorkerSave(object sender, ProgressChangedEventArgs e)

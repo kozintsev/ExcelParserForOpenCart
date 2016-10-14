@@ -56,7 +56,7 @@ namespace ExcelParserForOpenCart.Prices
                 };
                 var vendorCode = ConverterToString(range.Cells[i, 4] as Range);
                 line.Name = ConverterToString(range.Cells[i, 3] as Range);
-                line.Producer = GetProducer(line.Name);
+                line.Producer = GetManufacturers(line.Name);
                 if (string.IsNullOrEmpty(vendorCode) && !string.IsNullOrEmpty(line.Name))
                     continue; // игнорировать строки без артикля
                 line.Cost = ConverterToString(range.Cells[i, 7] as Range);                               

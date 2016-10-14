@@ -78,7 +78,7 @@ namespace ExcelParserForOpenCart.Prices
                     ProductDescription = desk,
                     Qt = "1000"
                 };
-                line.Producer = GetProducer(line.Name);
+                line.Producer = GetManufacturers(line.Name);
 
                 if (!string.IsNullOrEmpty(line.Name))
                     ResultingPrice.Add(line);

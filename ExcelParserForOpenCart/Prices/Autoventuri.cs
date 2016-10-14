@@ -86,7 +86,7 @@ namespace ExcelParserForOpenCart.Prices
                 var vendorCode = ConverterToString(range.Cells[i, 3] as Range);
 
                 line.Name = ConverterToString(range.Cells[i, 2] as Range).TrimStart(' '); // тримим пробелы вначале строки
-                line.Producer = GetProducer(line.Name);
+                line.Producer = GetManufacturers(line.Name);
 
                 if (string.IsNullOrEmpty(vendorCode) && !string.IsNullOrEmpty(line.Name))
                     continue; // игнорировать строки без артикля

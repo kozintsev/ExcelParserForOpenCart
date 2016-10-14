@@ -93,7 +93,7 @@ namespace ExcelParserForOpenCart.Prices
         /// </summary>
         /// <param name="name">Наименование товара в прайс-листе</param>
         /// <returns></returns>
-        protected string GetProducer(string name)
+        protected string GetManufacturers(string name)
         {
             var tempName = name.ToUpper();
             foreach (var manufacturer in Manufacturers)
