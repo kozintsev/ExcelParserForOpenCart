@@ -12,7 +12,7 @@ namespace ExcelParserForOpenCart.Prices
     {
         private readonly ScriptEngine _engine;
         private readonly string _folder;
-        private const string DetermineFile = "DetermineTypeOfPriceList.py";
+        private const string DetermineFile = "test.py";
 
         public PyWrapper(object sender, DoWorkEventArgs e)
             : base(sender, e)
@@ -27,19 +27,30 @@ namespace ExcelParserForOpenCart.Prices
             if (!File.Exists(detFile)) 
                 return;
             var scope = _engine.CreateScope();
-            _engine.ExecuteFile(detFile, scope);
-            dynamic determineType = scope.GetVariable("determine_type");
-            dynamic result = determineType(range);
-            if (result == null) 
-                return;
-            var fileName = result.ToString();
-            if (string.IsNullOrWhiteSpace(fileName)) 
-                return;
-            var filePath = Path.Combine(_folder, fileName);
-            if (!File.Exists(filePath)) 
-                return;
-            _engine.Execute(filePath, scope);
-            dynamic analyze = scope.GetVariable("analyze");
+            try
+            {
+                //_engine.Execute("print 'hello, world'");
+                scope.SetVariable("r", range);
+                _engine.ExecuteFile(detFile, scope);
+                dynamic zNumber = scope.GetVariable("t");
+                //dynamic determineType = scope.GetVariable("determine_type");
+                //dynamic result = determineType(range);
+                //if (result == null)
+                //    return;
+                //var fileName = result.ToString();
+                //if (string.IsNullOrWhiteSpace(fileName))
+                //    return;
+                //var filePath = Path.Combine(_folder, fileName);
+                //if (!File.Exists(filePath))
+                //    return;
+                //_engine.Execute(filePath, scope);
+                //dynamic analyze = scope.GetVariable("analyze");
+            }
+            catch (Exception ex)
+            {
+                var s = ex.Message;
+            }
+            
         }
     }
 }

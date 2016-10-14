@@ -197,72 +197,72 @@ namespace ExcelParserForOpenCart
             _workerOpen.ReportProgress(10);
             var py = new PyWrapper(sender, e);
             py.Analyze(range);
-            PriceType = DetermineTypeOfPriceList(range);
-            switch (PriceType)
-            {
-                case EnumPrices.ДваСоюза:
-                    var for2Union = new For2Union(sender, e);
-                    for2Union.Analyze(row, range);
-                    _resultingPrice = for2Union.ResultingPrice;
-                    break;
-                case EnumPrices.OJ:
-                    var ojPrice = new OjPrice(sender, e);
-                    ojPrice.OnMsg += s =>
-                    {
-                        _workerOpen.ReportProgress(20, s);
-                    };
-                    ojPrice.Analyze(row, range);
-                    _resultingPrice = ojPrice.ResultingPrice;
-                    break;
-                case EnumPrices.ПТГрупп:
-                    var ptGrupp = new PTGrupp(sender, e);
-                    ptGrupp.Analyze(row, range);
-                    _resultingPrice = ptGrupp.ResultingPrice;
-                    break;
-                case EnumPrices.РивальАвтоБроня:
-                    var autoBronya = new Rival(sender, e);
-                    autoBronya.AnalyzeBronya(row, range);
-                    _resultingPrice = autoBronya.ResultingPrice;
-                    break;
-                case EnumPrices.РивальПодкрылки:
-                    var podkrilki = new Rival(sender, e);
-                    podkrilki.AnalyzePodkrilki(row, range);
-                    _resultingPrice = podkrilki.ResultingPrice;
-                    break;
-                case EnumPrices.РивальПодлокотники:
-                    var podlokotniki = new Rival(sender, e);
-                    podlokotniki.AnalyzePodlokotniki(row, range);
-                    _resultingPrice = podlokotniki.ResultingPrice;
-                    break;
-                case EnumPrices.Autogur73:
-                    var autogurPrice = new AutogurPrice(sender, e);
-                    autogurPrice.Analyze(row, range);
-                    _resultingPrice = autogurPrice.ResultingPrice;
-                    break;
-                case EnumPrices.Композит:
-                    break;
-                case EnumPrices.Риваль:
-                    break;
-                case EnumPrices.Автовентури:
-                    var autoventuri = new Autoventuri(sender, e);
-                    //Запускаем парсинг картинок с сайта
-                    if (Global.SearchFoto) autoventuri.ParseImg();
-                    autoventuri.Analyze(row, range);
-                    _countOfLink = autoventuri.CountOfLink;
-                    _resultingPrice = autoventuri.ResultingPrice;
-                    break;
-                case EnumPrices.Левандовская:
-                    var lewandowski = new Lewandowski(sender, e);
-                    lewandowski.Analyze(row, range);
-                    _resultingPrice = lewandowski.ResultingPrice;
-                    break;
-                case EnumPrices.Неизвестный:
-                    _workerOpen.ReportProgress(0, "Прайс не опознан");
-                    break;
-                default:
-                    _workerOpen.ReportProgress(0, "Прайс не опознан");
-                    break;
-            }
+            //PriceType = DetermineTypeOfPriceList(range);
+            //switch (PriceType)
+            //{
+            //    case EnumPrices.ДваСоюза:
+            //        var for2Union = new For2Union(sender, e);
+            //        for2Union.Analyze(row, range);
+            //        _resultingPrice = for2Union.ResultingPrice;
+            //        break;
+            //    case EnumPrices.OJ:
+            //        var ojPrice = new OjPrice(sender, e);
+            //        ojPrice.OnMsg += s =>
+            //        {
+            //            _workerOpen.ReportProgress(20, s);
+            //        };
+            //        ojPrice.Analyze(row, range);
+            //        _resultingPrice = ojPrice.ResultingPrice;
+            //        break;
+            //    case EnumPrices.ПТГрупп:
+            //        var ptGrupp = new PTGrupp(sender, e);
+            //        ptGrupp.Analyze(row, range);
+            //        _resultingPrice = ptGrupp.ResultingPrice;
+            //        break;
+            //    case EnumPrices.РивальАвтоБроня:
+            //        var autoBronya = new Rival(sender, e);
+            //        autoBronya.AnalyzeBronya(row, range);
+            //        _resultingPrice = autoBronya.ResultingPrice;
+            //        break;
+            //    case EnumPrices.РивальПодкрылки:
+            //        var podkrilki = new Rival(sender, e);
+            //        podkrilki.AnalyzePodkrilki(row, range);
+            //        _resultingPrice = podkrilki.ResultingPrice;
+            //        break;
+            //    case EnumPrices.РивальПодлокотники:
+            //        var podlokotniki = new Rival(sender, e);
+            //        podlokotniki.AnalyzePodlokotniki(row, range);
+            //        _resultingPrice = podlokotniki.ResultingPrice;
+            //        break;
+            //    case EnumPrices.Autogur73:
+            //        var autogurPrice = new AutogurPrice(sender, e);
+            //        autogurPrice.Analyze(row, range);
+            //        _resultingPrice = autogurPrice.ResultingPrice;
+            //        break;
+            //    case EnumPrices.Композит:
+            //        break;
+            //    case EnumPrices.Риваль:
+            //        break;
+            //    case EnumPrices.Автовентури:
+            //        var autoventuri = new Autoventuri(sender, e);
+            //        //Запускаем парсинг картинок с сайта
+            //        if (Global.SearchFoto) autoventuri.ParseImg();
+            //        autoventuri.Analyze(row, range);
+            //        _countOfLink = autoventuri.CountOfLink;
+            //        _resultingPrice = autoventuri.ResultingPrice;
+            //        break;
+            //    case EnumPrices.Левандовская:
+            //        var lewandowski = new Lewandowski(sender, e);
+            //        lewandowski.Analyze(row, range);
+            //        _resultingPrice = lewandowski.ResultingPrice;
+            //        break;
+            //    case EnumPrices.Неизвестный:
+            //        _workerOpen.ReportProgress(0, "Прайс не опознан");
+            //        break;
+            //    default:
+            //        _workerOpen.ReportProgress(0, "Прайс не опознан");
+            //        break;
+            //}
             application.Quit();
             ReleaseObject(worksheet);
             ReleaseObject(workbook);
