@@ -26,15 +26,12 @@ namespace ExcelParserForOpenCart.Prices
             Worker = sender as BackgroundWorker;
             E = e;
             ResultingPrice = new List<OutputPriceLine>();
-            Manufacturers = new List<Manufacturer>();
-            using (var baseConnecter = new BaseConnecter(OnBaseMsgAction))
-            {
-                Manufacturers.AddRange(baseConnecter.GetManufacturers());
-            }           
+            AddManufacturers();
         }
 
         protected GeneralMethods()
         {
+            AddManufacturers();
         }
 
         protected static string ConverterToString(dynamic obj)
@@ -105,6 +102,15 @@ namespace ExcelParserForOpenCart.Prices
                     return manufacturer.Name;
             }
             return string.Empty;
+        }
+
+        private void AddManufacturers()
+        {
+            Manufacturers = new List<Manufacturer>();
+            using (var baseConnecter = new BaseConnecter(OnBaseMsgAction))
+            {
+                Manufacturers.AddRange(baseConnecter.GetManufacturers());
+            }
         }
 
         private void OnBaseMsgAction(string s)

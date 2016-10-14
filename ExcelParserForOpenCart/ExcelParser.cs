@@ -268,7 +268,9 @@ namespace ExcelParserForOpenCart
             ReleaseObject(application);
             _workerOpen.ReportProgress(!e.Cancel ? 50 : 0);
         }
-
+        /// <summary>
+        /// Определение производителя из описания товара
+        /// </summary>
         private void DetetmineManufacturer()
         {
             foreach (var item in _resultingPrice)
