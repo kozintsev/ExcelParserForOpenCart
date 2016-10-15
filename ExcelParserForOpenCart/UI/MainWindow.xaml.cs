@@ -28,8 +28,8 @@ namespace ExcelParserForOpenCart.UI
             BtnAddFoto.IsEnabled = false;
             if (CbSearchFoto.IsChecked != null) Global.SearchFoto = CbSearchFoto.IsChecked.Value;
             if (CbSaveOnlyWithFoto.IsChecked != null) Global.SaveOnlyWithFoto = CbSaveOnlyWithFoto.IsChecked.Value;
-            var strVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-            Title = string.Format("Конвертер прайслистов (версия: {0})", strVersion);
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            Title = string.Format("Конвертер прайслистов (версия: {0}.{1})", version.Major, version.Minor);
             _excelParser = new ExcelParser();
             _excelParser.OnParserAction += OnParserAction;
             _excelParser.OnProgressBarAction += OnProgressBarAction;

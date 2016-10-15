@@ -280,6 +280,18 @@ namespace ExcelParserForOpenCart
                 if (!string.IsNullOrWhiteSpace(m))
                 {
                     item.Producer = m;
+                    continue;
+                }
+                var m2 = GetManufacturers(item.Category1);
+                if (!string.IsNullOrWhiteSpace(m2))
+                {
+                    item.Producer = m2;
+                    continue;
+                }
+                var m3 = GetManufacturers(item.Category2);
+                if (!string.IsNullOrWhiteSpace(m3))
+                {
+                    item.Producer = m3;
                 }
             }
         }
