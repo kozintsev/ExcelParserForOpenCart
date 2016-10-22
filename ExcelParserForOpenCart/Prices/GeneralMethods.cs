@@ -92,6 +92,7 @@ namespace ExcelParserForOpenCart.Prices
         /// <returns></returns>
         protected string GetManufacturers(string name)
         {
+            if (string.IsNullOrWhiteSpace(name)) return string.Empty;
             var tempName = name.ToUpper();
             foreach (var manufacturer in Manufacturers)
             {

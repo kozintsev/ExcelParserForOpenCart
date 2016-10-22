@@ -92,7 +92,11 @@ namespace ExcelParserForOpenCart
                 SendMessage("Ошибка! Отсутствует шаблон!");
                 return;
             }
-            if (_resultingPrice == null || _resultingPrice.Count < 1) return;
+            if (_resultingPrice == null || _resultingPrice.Count < 1)
+            {
+                SendMessage("Нет данных для сохранения в файл!");
+                return;
+            }
             _workerSave = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true};
             _workerSave.DoWork += DoWorkSave;
             _workerSave.RunWorkerCompleted += RunWorkerCompletedWorkerSave;
